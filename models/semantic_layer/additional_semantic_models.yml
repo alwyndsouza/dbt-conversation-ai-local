@@ -1,0 +1,167 @@
+version: 2
+
+semantic_models:
+  - name: daily_revenue
+    description: "Daily revenue semantic model for time-series analysis"
+    model: ref('fct_daily_orders')
+    defaults:
+      agg_time_dimension: order_date
+    
+    entities:
+      - name: date
+        type: primary
+        expr: order_date
+    
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: day_of_week
+        type: categorical
+        expr: "dayofweek(order_date)"
+      - name: order_month
+        type: categorical
+        expr: "month(order_date)"
+      - name: order_quarter
+        type: categorical
+        expr: "quarter(order_date)"
+    
+    measures:
+      - name: daily_revenue
+        description: "Daily revenue total"
+        agg: sum
+        expr: revenue
+      - name: daily_order_count
+        description: "Daily order count"
+        agg: sum
+        expr: order_count
+      - name: daily_customers
+        description: "Daily unique customer count"
+        agg: sum
+        expr: unique_customers
+      - name: daily_avg_order_value
+        description: "Average order value per day"
+        agg: average
+        expr: avg_order_value
+      - name: completed_orders_pct
+        description: "Percentage of completed orders"
+        agg: average
+        expr: "cast(completed_orders as double) / cast(order_count as double) * 100"
+      - name: cancellation_rate
+        description: "Order cancellation rate"
+        agg: average
+        expr: "cast(cancelled_orders as double) / cast(order_count as double) * 100"
+
+  - name: geographic_revenue
+    description: "Geographic revenue semantic model for location-based analysis"
+    model: ref('fct_revenue_by_state')
+    defaults:
+      agg_time_dimension: order_date
+    
+    entities:
+      - name: geo_key
+        type: primary
+        expr: "state || '_' || order_date"
+    
+    dimensions:
+      - name: state
+        type: categorical
+        expr: state
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: region
+        type: categorical
+        expr: >
+          case
+            when state in ('NY', 'PA') then 'Northeast'
+            when state in ('TX') then 'South'
+            when state in ('CA', 'AZ') then 'West'
+            when state in ('IL') then 'Midwest'
+            else 'Other'
+          end
+    
+    measures:
+      - name: state_revenue
+        description: "Revenue by state"
+        agg: sum
+        expr: revenue
+      - name: state_orders
+        description: "Order count by state"
+        agg: sum
+        expr: order_count
+      - name: state_customers
+        description: "Unique customers by state"
+        agg: sum
+        expr: unique_customers
+      - name: state_avg_order_value
+        description: "Average order value by state"
+        agg: average
+        expr: avg_order_value
+
+  - name: order_status_analysis
+    description: "Order status semantic model for operational metrics"
+    model: ref('fct_orders')
+    defaults:
+      agg_time_dimension: order_date
+    
+    entities:
+      - name: order
+        type: primary
+        expr: order_id
+      - name: customer
+        type: foreign
+        expr: customer_id
+    
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: order_status
+        type: categorical
+        expr: order_status
+      - name: order_year
+        type: categorical
+        expr: order_year
+      - name: order_month
+        type: categorical
+        expr: order_month
+      - name: state
+        type: categorical
+        expr: state
+      - name: city
+        type: categorical
+        expr: city
+    
+    measures:
+      - name: total_orders_count
+        description: "Total count of all orders"
+        agg: count
+        expr: order_id
+      - name: completed_revenue
+        description: "Revenue from completed orders only"
+        agg: sum
+        expr: "case when order_status = 'completed' then order_total else 0 end"
+      - name: pending_orders_count
+        description: "Count of pending orders"
+        agg: sum
+        expr: "case when order_status = 'pending' then 1 else 0 end"
+      - name: cancelled_orders_count
+        description: "Count of cancelled orders"
+        agg: sum
+        expr: "case when order_status = 'cancelled' then 1 else 0 end"
+      - name: completed_orders_count
+        description: "Count of completed orders"
+        agg: sum
+        expr: "case when order_status = 'completed' then 1 else 0 end"
+      - name: total_order_value
+        description: "Sum of all order values regardless of status"
+        agg: sum
+        expr: order_total
+      - name: avg_completed_order_value
+        description: "Average value of completed orders"
+        agg: average
+        expr: "case when order_status = 'completed' then order_total else null end"

@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: fct_daily_orders
+    description: "Daily aggregate fact table for order metrics"
+    columns:
+      - name: order_date
+        description: "Date of orders"
+        tests:
+          - not_null
+          - unique
+      - name: order_count
+        description: "Total number of orders for the day"
+      - name: unique_customers
+        description: "Number of unique customers who ordered"
+      - name: revenue
+        description: "Total revenue from completed orders"
+      - name: completed_orders
+        description: "Number of completed orders"
+      - name: pending_orders
+        description: "Number of pending orders"
+      - name: cancelled_orders
+        description: "Number of cancelled orders"
+      - name: avg_order_value
+        description: "Average order value for completed orders"
+
+  - name: fct_revenue_by_state
+    description: "State-level daily revenue fact table"
+    columns:
+      - name: state
+        description: "State abbreviation"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Date of orders"
+        tests:
+          - not_null
+      - name: order_count
+        description: "Number of orders in state on date"
+      - name: unique_customers
+        description: "Unique customers in state on date"
+      - name: revenue
+        description: "Revenue from completed orders"
+      - name: avg_order_value
+        description: "Average order value"

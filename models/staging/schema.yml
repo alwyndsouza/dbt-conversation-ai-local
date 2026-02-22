@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Staging model for orders data with basic transformations"
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to customers"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Date when the order was placed"
+        tests:
+          - not_null
+      - name: order_total
+        description: "Total amount of the order"
+        tests:
+          - not_null
+      - name: order_status
+        description: "Current status of the order"
+        tests:
+          - accepted_values:
+              config:
+                severity: warn
+              arguments:
+                values: ['completed', 'pending', 'cancelled']
+
+  - name: stg_customers
+    description: "Staging model for customer data with basic transformations"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each customer"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Full name of the customer"
+        tests:
+          - not_null
+      - name: email
+        description: "Email address of the customer"
+        tests:
+          - unique
+          - not_null
+      - name: city
+        description: "City where customer is located"
+      - name: state
+        description: "State where customer is located"
+      - name: joined_date
+        description: "Date when customer joined"
+        tests:
+          - not_null

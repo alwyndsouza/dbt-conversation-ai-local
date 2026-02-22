@@ -1,0 +1,23 @@
+dbt-core>=1.7.0,<2.0.0
+dbt-duckdb>=1.7.0,<2.0.0
+duckdb>=0.10.0
+
+# For semantic layer queries and MetricFlow CLI
+# MetricFlow CLI tools (separate package required for 'dbt sl' commands)
+dbt-metricflow>=0.8.0
+
+# For dbt-mcp server
+dbt-mcp>=0.2.1
+
+# For Natural Language Semantic Layer App
+streamlit>=1.31.0
+python-dotenv>=1.0.1
+pandas>=2.0.0
+plotly>=5.18.0
+
+# LLM Provider
+ollama>=0.6.0        # Local LLM (free, private)
+
+# Development dependencies (optional)
+# requests>=2.31.0  # For API client examples
+# flask>=3.0.0      # If building custom API wrapper

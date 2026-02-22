@@ -1,0 +1,90 @@
+version: 2
+
+semantic_models:
+  - name: orders
+    description: "Order-level semantic model for metrics"
+    model: ref('fct_orders')
+    defaults:
+      agg_time_dimension: order_date
+    
+    entities:
+      - name: order_id
+        type: primary
+        expr: order_id
+      - name: customer
+        type: foreign
+        expr: customer_id
+    
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: order_status
+        type: categorical
+      - name: customer_name
+        type: categorical
+      - name: city
+        type: categorical
+      - name: state
+        type: categorical
+    
+    measures:
+      - name: order_total
+        description: "Sum of all order totals"
+        agg: sum
+      - name: order_count
+        description: "Count of orders"
+        agg: count
+        expr: order_id
+      - name: avg_order_value
+        description: "Average order value"
+        agg: average
+        expr: order_total
+      - name: completed_order_total
+        description: "Sum of completed order totals"
+        agg: sum
+        expr: "case when order_status = 'completed' then order_total else 0 end"
+
+  - name: customers
+    description: "Customer-level semantic model for metrics"
+    model: ref('fct_customers')
+    defaults:
+      agg_time_dimension: joined_date
+    
+    entities:
+      - name: customer
+        type: primary
+        expr: customer_id
+    
+    dimensions:
+      - name: customer_name
+        type: categorical
+      - name: customer_segment
+        type: categorical
+      - name: city
+        type: categorical
+      - name: state
+        type: categorical
+      - name: joined_date
+        type: time
+        type_params:
+          time_granularity: day
+    
+    measures:
+      - name: total_customers
+        description: "Count of customers"
+        agg: count
+        expr: customer_id
+      - name: total_revenue
+        description: "Sum of total revenue across all customers"
+        agg: sum
+        expr: total_revenue
+      - name: avg_customer_revenue
+        description: "Average revenue per customer"
+        agg: average
+        expr: total_revenue
+      - name: total_orders
+        description: "Sum of all orders across customers"
+        agg: sum
+        expr: total_orders

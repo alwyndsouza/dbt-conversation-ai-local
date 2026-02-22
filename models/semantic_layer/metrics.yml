@@ -1,0 +1,61 @@
+version: 2
+
+metrics:
+  # Revenue Metrics
+  - name: total_revenue
+    description: "Total revenue from all completed orders"
+    type: simple
+    label: "Total Revenue"
+    type_params:
+      measure: completed_order_total
+    
+  - name: average_order_value
+    description: "Average value per order"
+    type: simple
+    label: "Average Order Value"
+    type_params:
+      measure: avg_order_value
+  
+  - name: total_orders
+    description: "Total number of orders"
+    type: simple
+    label: "Total Orders"
+    type_params:
+      measure: order_count
+  
+  # Customer Metrics
+  - name: customer_count
+    description: "Total number of customers"
+    type: simple
+    label: "Customer Count"
+    type_params:
+      measure: total_customers
+  
+  - name: revenue_per_customer
+    description: "Average revenue generated per customer"
+    type: simple
+    label: "Revenue Per Customer"
+    type_params:
+      measure: avg_customer_revenue
+  
+  # Derived Metrics
+  - name: revenue_growth_rate
+    description: "Month-over-month revenue growth rate"
+    type: derived
+    label: "Revenue Growth Rate"
+    type_params:
+      expr: (current_revenue - prior_revenue) / prior_revenue * 100
+      metrics:
+        - name: total_revenue
+          alias: current_revenue
+        - name: total_revenue
+          alias: prior_revenue
+          offset_window: 1 month
+  
+  - name: orders_per_customer
+    description: "Average number of orders per customer"
+    type: ratio
+    label: "Orders Per Customer"
+    type_params:
+      numerator: total_orders
+      denominator: customer_count

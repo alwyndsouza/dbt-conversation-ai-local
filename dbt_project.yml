@@ -1,0 +1,37 @@
+name: 'dbt_learn_demo'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_learn_demo'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_learn_demo:
+    staging:
+      +materialized: view
+      +tags: ["staging"]
+    intermediate:
+      +materialized: view
+      +tags: ["intermediate"]
+    marts:
+      +materialized: table
+      +tags: ["marts"]
+
+seeds:
+  dbt_learn_demo:
+    +quote_columns: false
+
+vars:
+  # Semantic layer variables
+  start_date: '2023-01-01'
+  end_date: '2024-12-31'

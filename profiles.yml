@@ -1,0 +1,11 @@
+dbt_learn_demo:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: dbt_learn_demo.duckdb
+      threads: 4
+    prod:
+      type: duckdb
+      path: dbt_learn_demo_prod.duckdb
+      threads: 8

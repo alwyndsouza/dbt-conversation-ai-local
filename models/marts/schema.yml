@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: fct_customers
+    description: "Customer fact table with aggregated order metrics and segmentation"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each customer"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Full name of the customer"
+      - name: email
+        description: "Email address of the customer"
+      - name: city
+        description: "City where customer is located"
+      - name: state
+        description: "State where customer is located"
+      - name: joined_date
+        description: "Date when customer joined"
+      - name: total_orders
+        description: "Total number of orders"
+      - name: completed_orders
+        description: "Number of completed orders"
+      - name: pending_orders
+        description: "Number of pending orders"
+      - name: cancelled_orders
+        description: "Number of cancelled orders"
+      - name: total_revenue
+        description: "Total revenue from completed orders"
+      - name: avg_order_value
+        description: "Average value per completed order"
+      - name: first_order_date
+        description: "Date of first order"
+      - name: last_order_date
+        description: "Date of most recent order"
+      - name: customer_segment
+        description: "Customer segment based on total revenue"
+
+  - name: fct_orders
+    description: "Order fact table with customer details and time dimensions"
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to customers"
+      - name: customer_name
+        description: "Name of the customer who placed the order"
+      - name: email
+        description: "Email of the customer"
+      - name: city
+        description: "City of the customer"
+      - name: state
+        description: "State of the customer"
+      - name: order_date
+        description: "Date when order was placed"
+      - name: order_total
+        description: "Total amount of the order"
+      - name: order_status
+        description: "Current status of the order"
+      - name: order_year
+        description: "Year extracted from order date"
+      - name: order_month
+        description: "Month extracted from order date"
+      - name: order_day
+        description: "Day extracted from order date"
+      - name: order_day_of_week
+        description: "Day of week extracted from order date"

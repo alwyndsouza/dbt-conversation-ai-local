@@ -1,0 +1,10 @@
+customer_id,customer_name,email,city,state,joined_date
+101,John Doe,john.doe@example.com,New York,NY,2022-12-01
+102,Jane Smith,jane.smith@example.com,Los Angeles,CA,2022-12-05
+103,Bob Johnson,bob.johnson@example.com,Chicago,IL,2022-12-10
+104,Alice Williams,alice.williams@example.com,Houston,TX,2022-12-15
+105,Charlie Brown,charlie.brown@example.com,Phoenix,AZ,2022-12-20
+106,Diana Prince,diana.prince@example.com,Philadelphia,PA,2023-01-05
+107,Edward Norton,edward.norton@example.com,San Antonio,TX,2023-01-10
+108,Fiona Green,fiona.green@example.com,San Diego,CA,2023-01-15
+109,George Hill,george.hill@example.com,Dallas,TX,2023-01-20

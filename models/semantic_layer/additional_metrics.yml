@@ -1,0 +1,181 @@
+version: 2
+
+metrics:
+  # Daily Performance Metrics
+  - name: daily_revenue_total
+    description: "Total daily revenue from all orders"
+    type: simple
+    label: "Daily Revenue"
+    type_params:
+      measure: daily_revenue
+  
+  - name: daily_order_volume
+    description: "Total orders per day"
+    type: simple
+    label: "Daily Order Volume"
+    type_params:
+      measure: daily_order_count
+  
+  - name: daily_customer_reach
+    description: "Unique customers served per day"
+    type: simple
+    label: "Daily Customer Reach"
+    type_params:
+      measure: daily_customers
+  
+  - name: completion_rate
+    description: "Percentage of orders that are completed"
+    type: simple
+    label: "Order Completion Rate"
+    type_params:
+      measure: completed_orders_pct
+  
+  - name: order_cancellation_rate
+    description: "Percentage of orders that are cancelled"
+    type: simple
+    label: "Order Cancellation Rate"
+    type_params:
+      measure: cancellation_rate
+  
+  # Geographic Metrics
+  - name: revenue_by_state
+    description: "Total revenue by state"
+    type: simple
+    label: "State Revenue"
+    type_params:
+      measure: state_revenue
+  
+  - name: orders_by_state
+    description: "Order count by state"
+    type: simple
+    label: "State Orders"
+    type_params:
+      measure: state_orders
+  
+  - name: avg_order_value_by_state
+    description: "Average order value by state"
+    type: simple
+    label: "State Average Order Value"
+    type_params:
+      measure: state_avg_order_value
+  
+  # Operational Metrics
+  - name: pending_orders
+    description: "Current count of pending orders"
+    type: simple
+    label: "Pending Orders"
+    type_params:
+      measure: pending_orders_count
+  
+  - name: cancelled_orders
+    description: "Total count of cancelled orders"
+    type: simple
+    label: "Cancelled Orders"
+    type_params:
+      measure: cancelled_orders_count
+  
+  - name: completed_orders
+    description: "Total count of completed orders"
+    type: simple
+    label: "Completed Orders"
+    type_params:
+      measure: completed_orders_count
+  
+  - name: fulfillment_efficiency
+    description: "Ratio of completed to total orders"
+    type: simple
+    label: "Fulfillment Efficiency"
+    type_params:
+      measure: completed_orders_pct
+  
+  # Customer Cohort Metrics (using customers semantic model)
+  - name: cohort_size
+    description: "Number of customers in cohort"
+    type: simple
+    label: "Cohort Size"
+    type_params:
+      measure: total_customers
+  
+  - name: cohort_ltv
+    description: "Lifetime value of customer cohort"
+    type: simple
+    label: "Cohort Lifetime Value"
+    type_params:
+      measure: total_revenue
+  
+  - name: cohort_engagement
+    description: "Average orders per customer in cohort"
+    type: simple
+    label: "Cohort Engagement"
+    type_params:
+      measure: avg_customer_revenue
+  
+  - name: customer_activation_rate
+    description: "Percentage of customers who made at least one purchase"
+    type: simple
+    label: "Customer Activation Rate"
+    type_params:
+      measure: total_customers
+  
+  - name: high_value_customer_rate
+    description: "Percentage of high value customers"
+    type: simple
+    label: "High Value Customer Rate"
+    type_params:
+      measure: total_customers
+  
+  # Derived Metrics for Period Comparisons
+  - name: revenue_week_over_week
+    description: "Week-over-week revenue growth"
+    type: derived
+    label: "WoW Revenue Growth"
+    type_params:
+      expr: (current_revenue - prior_revenue) / nullif(prior_revenue, 0) * 100
+      metrics:
+        - name: daily_revenue_total
+          alias: current_revenue
+        - name: daily_revenue_total
+          alias: prior_revenue
+          offset_window: 7 days
+  
+  - name: order_volume_month_over_month
+    description: "Month-over-month order volume change"
+    type: derived
+    label: "MoM Order Volume Change"
+    type_params:
+      expr: (current_orders - prior_orders) / nullif(prior_orders, 0) * 100
+      metrics:
+        - name: daily_order_volume
+          alias: current_orders
+        - name: daily_order_volume
+          alias: prior_orders
+          offset_window: 1 month
+  
+  - name: customer_retention_rate
+    description: "Percentage of customers who make repeat purchases"
+    type: simple
+    label: "Customer Retention Rate"
+    type_params:
+      measure: total_customers
+  
+  # Advanced Ratio Metrics
+  - name: revenue_per_order
+    description: "Average revenue generated per order"
+    type: simple
+    label: "Revenue Per Order"
+    type_params:
+      measure: avg_completed_order_value
+  
+  - name: orders_per_active_customer
+    description: "Average orders per active customer"
+    type: simple
+    label: "Orders Per Active Customer"
+    type_params:
+      measure: total_orders
+  
+  - name: revenue_concentration
+    description: "Revenue from high value customers as percentage of total"
+    type: simple
+    label: "Revenue Concentration"
+    type_params:
+      measure: total_revenue
