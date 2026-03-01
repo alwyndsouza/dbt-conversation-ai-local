@@ -34,11 +34,14 @@ git clone https://github.com/alwyndsouza/dbt-local-agent.git
 cd dbt-local-agent
 
 # Create and activate a virtual environment
-python3.12 -m venv venv
-source venv/bin/activate
+python3.12 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Verify installation
+dbt --version  # Should show duckdb plugin
 
 # Pull a local LLM
 ollama pull llama3.2
@@ -50,10 +53,15 @@ dbt build
 ### Launch
 
 ```bash
+# Make sure your virtual environment is activated!
+source .venv/bin/activate  # Run this in each new terminal
+
 streamlit run streamlit_app.py
 ```
 
 Open [http://localhost:8501](http://localhost:8501).
+
+> **⚠️ Important**: Always activate the virtual environment (`source .venv/bin/activate`) when opening a new terminal session.
 
 ---
 
@@ -183,7 +191,9 @@ These are the correct settings for fully local operation.
 
 | Problem | Fix |
 |---|---|
-| `mf: command not found` | `pip install dbt-metricflow` |
+| `Could not find adapter type duckdb!` | Activate the virtual environment: `source .venv/bin/activate` |
+| `No module named 'dbt.adapters.duckdb'` | Virtual environment not activated. Run: `source .venv/bin/activate` |
+| `mf: command not found` | `pip install dbt-metricflow` (with venv activated) |
 | No metrics found | Run `dbt parse` to generate the semantic manifest |
 | Ollama connection error | Ensure Ollama is running: `ollama serve` |
 | No models in sidebar | Pull a model: `ollama pull llama3.2` |

@@ -1,8 +1,8 @@
-name: 'dbt_learn_demo'
+name: 'dbt_local_agent'
 version: '1.0.0'
 config-version: 2
 
-profile: 'dbt_learn_demo'
+profile: 'dbt-local-agent'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -16,7 +16,7 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  dbt_learn_demo:
+  dbt_local_agent:
     staging:
       +materialized: view
       +tags: ["staging"]
@@ -28,7 +28,7 @@ models:
       +tags: ["marts"]
 
 seeds:
-  dbt_learn_demo:
+  dbt_local_agent:
     +quote_columns: false
 
 vars:
