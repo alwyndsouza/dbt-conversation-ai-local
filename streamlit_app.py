@@ -150,7 +150,7 @@ async def get_tools_definitions():
 
 # --- Streamlit UI ---
 
-st.set_page_config(page_title="dbt AI Agent", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="Conversational Data Experience", page_icon="🤖", layout="wide")
 
 # Custom CSS to match the clean look of the screenshot
 st.markdown("""
@@ -166,7 +166,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🤖 dbt AI Agent")
+st.title("🤖 Conversational Data Experience")
 
 # Sidebar
 with st.sidebar:
@@ -195,8 +195,8 @@ with st.sidebar:
         "Show me all the metrics that are defined",
         "What are the dimensions for total_revenue?",
         "Show total revenue by state",
-        "List all staging models",
-        "Run the dbt project"
+        "What is my Churn Rate and which is the best performing state. How can I increase my revenue and decrease churn. Please provide me with actionable insights"
+
     ]
     for example in examples:
         if st.button(example):
