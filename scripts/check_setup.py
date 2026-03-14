@@ -53,10 +53,17 @@ def main():
     }
 
     for pkg, cmd in packages.items():
+        # Use uv run for checks to ensure we use the project environment
+        # If it's a [sys.executable, '-c', ...], we want [uv, run, python, -c, ...]
+        if cmd[0] == sys.executable:
+            uv_cmd = ['uv', 'run', 'python'] + cmd[1:]
+        else:
+            uv_cmd = ['uv', 'run'] + cmd
+
         all_checks_passed &= check(
             f"Package/CLI installed: {pkg}",
-            run_command(cmd),
-            f"Run: pip install {pkg.split(' ')[0]}"
+            run_command(uv_cmd),
+            f"Run: uv add {pkg.split(' ')[0]}"
         )
 
     # Check Ollama service
@@ -102,14 +109,14 @@ def main():
     if all_checks_passed:
         print("✅ All checks passed! Ready to launch the app.")
         print("\nTo start the app, run:")
-        print("  ./scripts/run_app.sh")
+        print("  uv run streamlit run streamlit_app.py")
         return 0
     else:
         print("❌ Some checks failed. Please fix the issues above.")
         print("\nQuick fixes:")
-        print("  1. Install dependencies: pip install -r requirements.txt")
+        print("  1. Install dependencies: uv sync")
         print("  2. Start Ollama and pull a model: ollama pull llama3.2")
-        print("  3. Parse dbt: dbt parse")
+        print("  3. Parse dbt: uv run dbt parse")
         return 1
 
 if __name__ == '__main__':

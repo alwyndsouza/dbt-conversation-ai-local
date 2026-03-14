@@ -21,13 +21,13 @@ This is a local AI agent for dbt projects. It uses DuckDB as the database, dbt-m
 
 ### Setup
 ```bash
-pip install -r requirements.txt
-dbt seed && dbt run && dbt parse
+uv sync
+uv run dbt seed && uv run dbt run && uv run dbt parse
 ```
 
 ### Run the App
 ```bash
-streamlit run streamlit_app.py
+uv run streamlit run streamlit_app.py
 ```
 
 ### Testing

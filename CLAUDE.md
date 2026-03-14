@@ -41,9 +41,9 @@ The system prompt in `streamlit_app.py` should guide the LLM to:
 
 ## Helpful Commands
 ```bash
-dbt ls --resource-type metric   # List all metrics defined in dbt
-mf list metrics                  # List metrics via MetricFlow CLI
-mf query --metrics <name> --group-by <dim>  # Test a metric query
+uv run dbt ls --resource-type metric   # List all metrics defined in dbt
+uv run mf list metrics                  # List metrics via MetricFlow CLI
+uv run mf query --metrics <name> --group-by <dim>  # Test a metric query
 ```
 
 ## Troubleshooting
