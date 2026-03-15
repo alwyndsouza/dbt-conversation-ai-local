@@ -44,28 +44,20 @@ if [ "$ollama_available" = false ]; then
     exit 1
 fi
 
-# Check if streamlit is installed
-if ! command -v streamlit &> /dev/null; then
-    echo -e "${YELLOW}⚠️  Streamlit is not installed${NC}"
-    echo ""
-    echo "Installing dependencies..."
-    pip install -r requirements.txt
-    echo ""
-fi
-
-# Check if dbt project is parsed
-if [ ! -d "target" ] || [ ! -f "target/semantic_manifest.json" ]; then
-    echo -e "${YELLOW}⚠️  dbt project not parsed yet or semantic manifest missing${NC}"
-    echo ""
-    echo "Running dbt parse..."
-    dbt parse
-    echo ""
-fi
-
-# Launch streamlit from root
+# Launch streamlit using uv
 echo -e "${GREEN}✅ Launching app at http://localhost:8501${NC}"
 echo ""
 # Navigate to project root if script is run from scripts/
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
-streamlit run streamlit_app.py
+
+# Ensure dbt project is parsed
+if [ ! -d "target" ] || [ ! -f "target/semantic_manifest.json" ]; then
+    echo -e "${YELLOW}⚠️  dbt project not parsed yet or semantic manifest missing${NC}"
+    echo ""
+    echo "Running dbt parse..."
+    uv run dbt parse
+    echo ""
+fi
+
+uv run streamlit run streamlit_app.py
