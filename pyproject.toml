@@ -17,21 +17,3 @@ dependencies = [
     "streamlit>=1.31.0",
 ]
 
-[project]
-name = "dbt-local-agent"
-version = "0.1.0"
-description = "A local AI agent for your dbt project"
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "dbt-core>=1.7.0,<2.0.0",
-    "dbt-duckdb>=1.7.0,<2.0.0",
-    "dbt-mcp>=0.2.1",
-    "dbt-metricflow>=0.8.0",
-    "duckdb>=0.10.0",
-    "ollama>=0.6.0",
-    "pandas>=2.0.0",
-    "plotly>=5.18.0",
-    "python-dotenv>=1.0.1",
-    "streamlit>=1.31.0",
-]
