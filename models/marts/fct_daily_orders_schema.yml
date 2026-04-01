@@ -2,44 +2,137 @@ version: 2
 
 models:
   - name: fct_daily_orders
-    description: "Daily aggregate fact table for order metrics"
+    description: >
+      Daily aggregated order metrics for operational reporting and trend analysis.
+      One row per calendar date showing order volumes, customer counts, and
+      revenue for that day. Primary table for daily sales dashboards, business
+      health monitoring, and short-term forecasting. Materialized as a table
+      for fast time-series queries. Includes all dates with orders - use with
+      a complete date spine for days without orders.
     columns:
       - name: order_date
-        description: "Date of orders"
+        description: >
+          Calendar date for the aggregated metrics. Primary date key for
+          daily reporting. Should be joined with date dimension for
+          calendar attributes (fiscal period, holidays, etc.).
         tests:
           - not_null
           - unique
       - name: order_count
-        description: "Total number of orders for the day"
+        description: >
+          Total number of orders placed on this date across all statuses.
+          Raw volume indicator for daily business activity.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: unique_customers
-        description: "Number of unique customers who ordered"
-      - name: revenue
-        description: "Total revenue from completed orders"
+        description: >
+          Count of distinct customers who placed orders on this date.
+          Indicates customer acquisition or repeat purchase activity.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: total_revenue
+        description: >
+          Sum of order_total for completed orders only. Represents actual
+          daily revenue recognized. Excludes pending and cancelled orders.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: completed_orders
-        description: "Number of completed orders"
+        description: >
+          Count of orders successfully delivered and payment collected.
+          Core operational metric for fulfillment tracking.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: pending_orders
-        description: "Number of pending orders"
+        description: >
+          Count of orders awaiting fulfillment. Represents pipeline
+          and expected future revenue.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: cancelled_orders
-        description: "Number of cancelled orders"
+        description: >
+          Count of orders cancelled or refunded. High cancellation rates
+          may indicate product or fulfillment issues requiring attention.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: avg_order_value
-        description: "Average order value for completed orders"
+        description: >
+          Average order_total for completed orders on this date.
+          Null if no completed orders. Indicates purchasing behavior trends.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or avg_order_value is null"
 
   - name: fct_revenue_by_state
-    description: "State-level daily revenue fact table"
+    description: >
+      Geographic revenue analysis at state level with daily granularity.
+      One row per state-date combination showing order volumes and revenue
+      broken down by customer location. Used for regional performance analysis,
+      tax reporting by jurisdiction, and location-based strategy decisions.
+      Materialized as a table for fast geographic queries. Useful for
+      identifying high-performing states and opportunities for growth.
     columns:
       - name: state
-        description: "State abbreviation"
+        description: >
+          Two-letter state abbreviation representing customer location.
+          Primary geographic dimension for regional analysis.
         tests:
           - not_null
       - name: order_date
-        description: "Date of orders"
+        description: >
+          Calendar date for time-series geographic analysis.
         tests:
           - not_null
       - name: order_count
-        description: "Number of orders in state on date"
+        description: >
+          Total orders from customers in this state on this date.
+          Raw volume metric for state-level activity tracking.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: unique_customers
-        description: "Unique customers in state on date"
-      - name: revenue
-        description: "Revenue from completed orders"
+        description: >
+          Count of distinct customers from this state who ordered.
+          Indicates customer base size and repeat purchase patterns.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: total_revenue
+        description: >
+          Revenue from completed orders by customers in this state.
+          Core metric for state-level sales performance.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: avg_order_value
-        description: "Average order value"
+        description: >
+          Average order value for customers in this state. Null when
+          no completed orders. Indicates spending patterns by region.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or avg_order_value is null"

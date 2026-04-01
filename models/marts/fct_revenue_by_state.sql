@@ -1,5 +1,11 @@
 with orders as (
-    select * from {{ ref('fct_orders') }}
+    select
+        state,
+        order_date,
+        order_total,
+        order_status,
+        customer_id
+    from {{ ref('fct_orders') }}
 ),
 
 state_aggregates as (
@@ -8,7 +14,7 @@ state_aggregates as (
         order_date,
         count(*) as order_count,
         count(distinct customer_id) as unique_customers,
-        sum(case when order_status = 'completed' then order_total else 0 end) as revenue,
+        {{ order_status_counts('order_total', 'order_status') }},
         avg(case when order_status = 'completed' then order_total else null end) as avg_order_value
     from orders
     group by state, order_date

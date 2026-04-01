@@ -2,71 +2,181 @@ version: 2
 
 models:
   - name: fct_customers
-    description: "Customer fact table with aggregated order metrics and segmentation"
+    description: >
+      Customer fact table combining profile data with behavioral metrics.
+      One row per customer showing their complete profile and order history.
+      Primary table for customer-centric analytics including segmentation,
+      lifetime value calculation, and retention analysis. Materialized as a
+      table for fast customer profile queries. Join with fact tables for
+      comprehensive customer journey analysis.
     columns:
       - name: customer_id
-        description: "Unique identifier for each customer"
+        description: >
+          Primary key. Unique identifier for each customer account.
+          Stable dimension key for customer-centric reporting.
         tests:
           - unique
           - not_null
       - name: customer_name
-        description: "Full name of the customer"
+        description: >
+          Full legal name for customer communications and reports.
       - name: email
-        description: "Email address of the customer"
+        description: >
+          Primary email address for marketing and notifications.
       - name: city
-        description: "City where customer is located"
+        description: >
+          Customer's primary city for geographic segmentation.
       - name: state
-        description: "State where customer is located"
+        description: >
+          State abbreviation for regional analysis and tax reporting.
       - name: joined_date
-        description: "Date when customer joined"
+        description: >
+          Account creation date. Used for customer age calculation
+          and cohort-based retention analysis.
       - name: total_orders
-        description: "Total number of orders"
+        description: >
+          Total count of all orders placed (completed, pending, cancelled).
+          Primary measure of customer engagement and purchase frequency.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: completed_orders
-        description: "Number of completed orders"
+        description: >
+          Count of successfully fulfilled orders. Excludes pending and
+          cancelled orders. Indicates actual purchase activity.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: pending_orders
-        description: "Number of pending orders"
+        description: >
+          Count of orders awaiting fulfillment. Represents near-term
+          revenue expectation.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: cancelled_orders
-        description: "Number of cancelled orders"
+        description: >
+          Count of refunded or abandoned orders. High cancellation rate
+          may indicate issues with products or checkout experience.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: total_revenue
-        description: "Total revenue from completed orders"
+        description: >
+          Lifetime revenue from completed orders only. Key metric for
+          customer lifetime value (LTV) calculations and revenue attribution.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: avg_order_value
-        description: "Average value per completed order"
+        description: >
+          Average spending per completed order. Null for customers with
+          no completed orders. Used for purchase pattern analysis.
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or avg_order_value is null"
       - name: first_order_date
-        description: "Date of first order"
+        description: >
+          Date of the customer's first order. Marks the start of
+          the commercial relationship.
       - name: last_order_date
-        description: "Date of most recent order"
+        description: >
+          Date of most recent order. Used with first_order_date to
+          calculate customer activity span and identify lapsed customers.
       - name: customer_segment
-        description: "Customer segment based on total revenue"
+        description: >
+          Strategic segmentation based on lifetime revenue. Thresholds:
+          High Value ≥ $500, Medium Value ≥ $200, Low Value > $0,
+          No Purchases = $0. Used for targeted marketing and VIP programs.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['High Value', 'Medium Value', 'Low Value', 'No Purchases']
 
   - name: fct_orders
-    description: "Order fact table with customer details and time dimensions"
+    description: >
+      Order transaction fact table with customer and time dimensions.
+      One row per order showing the complete transaction with enriched
+      customer attributes and date components. Primary table for order
+      analytics, fulfillment reporting, and revenue tracking. Materialized
+      as a table for fast transaction queries. All orders are included
+      regardless of status - use order_status to filter for revenue.
     columns:
       - name: order_id
-        description: "Unique identifier for each order"
+        description: >
+          Primary key. Unique order identifier for transaction-level
+          queries and order detail reporting.
         tests:
           - unique
           - not_null
       - name: customer_id
-        description: "Foreign key to customers"
+        description: >
+          Foreign key to stg_customers. Links order to customer profile.
+          Required for customer-centric order analysis.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
       - name: customer_name
-        description: "Name of the customer who placed the order"
+        description: >
+          Customer name at time of order for denormalized reporting.
+          Stored here to preserve historical order context.
       - name: email
-        description: "Email of the customer"
+        description: >
+          Customer email for order-related communications.
       - name: city
-        description: "City of the customer"
+        description: >
+          Customer's city at time of order for geographic analysis.
       - name: state
-        description: "State of the customer"
+        description: >
+          Customer's state for regional revenue and tax reporting.
       - name: order_date
-        description: "Date when order was placed"
+        description: >
+          Transaction date when order was placed. Primary date dimension
+          for time-series order analysis.
+        tests:
+          - not_null
       - name: order_total
-        description: "Total amount of the order"
+        description: >
+          Order value in dollars including all items. Always non-negative.
+          Filter by order_status='completed' for actual revenue.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: order_status
-        description: "Current status of the order"
+        description: >
+          Order lifecycle state. Revenue recognition rule: only 'completed'
+          orders count toward actual revenue. 'pending' = awaiting fulfillment,
+          'cancelled' = refunded.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['completed', 'pending', 'cancelled']
       - name: order_year
-        description: "Year extracted from order date"
+        description: >
+          Calendar year for annual reporting and YoY comparisons.
+        tests:
+          - not_null
       - name: order_month
-        description: "Month extracted from order date"
+        description: >
+          Month number (1-12) for monthly trend analysis.
+        tests:
+          - not_null
       - name: order_day
-        description: "Day extracted from order date"
+        description: >
+          Day of month for daily volume analysis.
+        tests:
+          - not_null
       - name: order_day_of_week
-        description: "Day of week extracted from order date"
+        description: >
+          Day of week (0=Sunday) for identifying ordering patterns.

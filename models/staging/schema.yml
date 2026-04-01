@@ -2,56 +2,119 @@ version: 2
 
 models:
   - name: stg_orders
-    description: "Staging model for orders data with basic transformations"
+    description: >
+      Staging model for order transactions from the source system. Contains all
+      order records with basic type casting and date component extraction.
+      This model is the core transaction table - every order placed by a customer.
+      Materialized as a view to always reflect the latest source data.
+      Joined with stg_customers in downstream models to enrich with customer details.
     columns:
       - name: order_id
-        description: "Unique identifier for each order"
+        description: >
+          Primary key. Unique identifier assigned by the source system for each
+          order transaction. Used to join with other order-related tables.
         tests:
           - unique
           - not_null
       - name: customer_id
-        description: "Foreign key to customers"
+        description: >
+          Foreign key linking to stg_customers. Identifies which customer placed
+          this order. All customer_id values must exist in the customers table.
         tests:
           - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
       - name: order_date
-        description: "Date when the order was placed"
+        description: >
+          Date when the customer submitted the order. Stored as DATE type.
+          Used as the primary date dimension for order analytics.
         tests:
           - not_null
       - name: order_total
-        description: "Total amount of the order"
+        description: >
+          Total monetary value of the order in dollars. Includes all items,
+          taxes, and shipping charges as applicable. Always non-negative.
+          Used for revenue calculations and customer lifetime value metrics.
         tests:
           - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
       - name: order_status
-        description: "Current status of the order"
+        description: >
+          Current lifecycle state of the order. Controls revenue recognition -
+          only 'completed' orders contribute to revenue. Status transitions:
+          pending → completed (successful delivery) or cancelled (refunded).
         tests:
           - accepted_values:
               config:
                 severity: warn
               arguments:
                 values: ['completed', 'pending', 'cancelled']
+      - name: order_year
+        description: >
+          Calendar year extracted from order_date for year-over-year
+          comparisons and annual reporting.
+        tests:
+          - not_null
+      - name: order_month
+        description: >
+          Calendar month (1-12) extracted from order_date for monthly
+          trend analysis and seasonal patterns.
+        tests:
+          - not_null
+      - name: order_day
+        description: >
+          Day of month (1-31) extracted from order_date for daily
+          volume analysis.
+        tests:
+          - not_null
+      - name: order_day_of_week
+        description: >
+          Day of week (0=Sunday, 6=Saturday) extracted from order_date.
+          Useful for identifying weekend vs weekday ordering patterns.
 
   - name: stg_customers
-    description: "Staging model for customer data with basic transformations"
+    description: >
+      Staging model for customer master data. Contains customer profile
+      information captured at account creation. Materialized as a view
+      to reflect current customer attributes. Used as the customer dimension
+      for all order-related analytics.
     columns:
       - name: customer_id
-        description: "Unique identifier for each customer"
+        description: >
+          Primary key. Unique identifier assigned when a customer account
+          is created. Used as the natural key for customer joins.
         tests:
           - unique
           - not_null
       - name: customer_name
-        description: "Full name of the customer"
+        description: >
+          Full legal name of the customer as registered. Used for
+          customer communications and reporting. Must not be null.
         tests:
           - not_null
       - name: email
-        description: "Email address of the customer"
+        description: >
+          Primary email address for customer communications. Unique
+          per customer account. Used for order confirmations and marketing.
         tests:
           - unique
           - not_null
       - name: city
-        description: "City where customer is located"
+        description: >
+          City where the customer's primary shipping address is located.
+          Used for geographic sales distribution analysis.
       - name: state
-        description: "State where customer is located"
+        description: >
+          Two-letter state abbreviation for the customer's location.
+          Used for regional sales reporting and state-level tax calculations.
       - name: joined_date
-        description: "Date when customer joined"
+        description: >
+          Date when the customer account was created. Represents the
+          start of the customer relationship. Used for customer tenure
+          calculations and cohort analysis.
         tests:
           - not_null
