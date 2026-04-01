@@ -1,0 +1,3 @@
+# State revenue source
+type: table
+sql: SELECT * FROM 'state_revenue.parquet'
