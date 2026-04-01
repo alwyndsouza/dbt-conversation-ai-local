@@ -1,4 +1,3 @@
 # Rill Project Configuration
 title: "Orders Analytics"
 description: "E-commerce orders analytics dashboard"
-default_timeout: 120

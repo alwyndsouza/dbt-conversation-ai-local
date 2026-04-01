@@ -1,3 +1,0 @@
-# Daily orders source
-type: table
-sql: SELECT * FROM 'daily_orders.parquet'

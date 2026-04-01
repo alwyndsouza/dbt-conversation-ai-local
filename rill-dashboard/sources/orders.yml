@@ -1,3 +1,0 @@
-# Orders source
-type: table
-sql: SELECT * FROM 'orders.parquet'

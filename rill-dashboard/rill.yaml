@@ -1,0 +1,16 @@
+# Rill Dashboard Project for Orders Analytics
+# Matches the Streamlit dashboard_app.py functionality
+
+compiler: rillv1
+
+display_name: Orders Analytics Dashboard
+description: |
+  Comprehensive e-commerce orders analytics dashboard showing:
+  - KPI metrics (Revenue, Orders, Customers, AOV)
+  - Revenue trends over time
+  - Order status breakdown
+  - Geographic revenue analysis
+  - Customer segmentation
+  - Daily order details
+
+olap_connector: duckdb

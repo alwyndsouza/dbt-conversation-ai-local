@@ -1,3 +1,0 @@
-# Customers source
-type: table
-sql: SELECT * FROM 'customers.parquet'

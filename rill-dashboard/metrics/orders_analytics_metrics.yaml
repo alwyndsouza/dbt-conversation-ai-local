@@ -1,0 +1,124 @@
+# Orders Analytics MetricsView
+# Provides all dimensions and measures for the dashboard
+
+type: metrics_view
+model: daily_orders
+
+dimensions:
+  - name: order_date
+    label: Order Date
+    column: order_date
+    type: time
+    description: Date of the order
+  
+  - name: state
+    label: State
+    column: state
+    type: categorical
+    description: US State where customer is located
+  
+  - name: customer_segment
+    label: Customer Segment
+    column: customer_segment
+    type: categorical
+    description: Customer revenue segment
+  
+  - name: customer_id
+    label: Customer ID
+    column: customer_id
+    type: categorical
+    description: Unique customer identifier
+  
+  - name: customer_name
+    label: Customer Name
+    column: customer_name
+    type: categorical
+    description: Customer full name
+  
+  - name: email
+    label: Email
+    column: email
+    type: categorical
+    description: Customer email address
+  
+  - name: city
+    label: City
+    column: city
+    type: categorical
+    description: Customer city
+  
+  - name: order_year
+    label: Year
+    column: order_year
+    type: categorical
+    description: Year of the order
+  
+  - name: order_month
+    label: Month
+    column: order_month
+    type: categorical
+    description: Month of the order
+
+measures:
+  - name: total_revenue
+    label: Total Revenue
+    type: simple
+    expression: SUM(total_revenue)
+    description: Sum of all order revenue
+    format_preset: currency_usd
+  
+  - name: total_orders
+    label: Total Orders
+    type: simple
+    expression: SUM(order_count)
+    description: Total number of orders
+    format_preset: number
+  
+  - name: completed_orders
+    label: Completed Orders
+    type: simple
+    expression: SUM(completed_orders)
+    description: Number of completed orders
+    format_preset: number
+  
+  - name: pending_orders
+    label: Pending Orders
+    type: simple
+    expression: SUM(pending_orders)
+    description: Number of pending orders
+    format_preset: number
+  
+  - name: cancelled_orders
+    label: Cancelled Orders
+    type: simple
+    expression: SUM(cancelled_orders)
+    description: Number of cancelled orders
+    format_preset: number
+  
+  - name: unique_customers
+    label: Unique Customers
+    type: simple
+    expression: SUM(unique_customers)
+    description: Number of unique customers
+    format_preset: number
+  
+  - name: total_customers
+    label: Total Customers
+    type: simple
+    expression: COUNT(DISTINCT customer_id)
+    description: Count of distinct customers
+    format_preset: number
+  
+  - name: avg_order_value
+    label: Average Order Value
+    type: simple
+    expression: AVG(avg_order_value)
+    description: Average value per order
+    format_preset: currency_usd
+  
+  - name: completion_rate
+    label: Completion Rate
+    type: derived
+    expression: completed_orders / (completed_orders + pending_orders + cancelled_orders)
+    description: Percentage of completed orders
+    format_preset: percent

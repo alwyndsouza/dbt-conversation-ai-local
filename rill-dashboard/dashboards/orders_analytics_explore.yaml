@@ -1,0 +1,31 @@
+# Explore YAML for Orders Analytics
+# Reference: https://docs.rilldata.com/reference/project-files/explores
+
+type: explore
+
+display_name: "Orders Analytics"
+description: "E-commerce orders analytics with KPIs, trends, and customer insights"
+metrics_view: orders_analytics_metrics
+
+dimensions:
+  - order_date
+  - state
+  - customer_segment
+  - customer_id
+  - customer_name
+  - city
+
+measures:
+  - total_revenue
+  - total_orders
+  - completed_orders
+  - pending_orders
+  - cancelled_orders
+  - unique_customers
+  - total_customers
+  - avg_order_value
+  - completion_rate
+
+defaults:
+  comparison_mode: time
+  time_range: P1M

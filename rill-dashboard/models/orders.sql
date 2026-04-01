@@ -1,19 +1,17 @@
--- Orders model combining order details with customer info
+-- Orders Model
 SELECT 
-    o.order_id,
-    o.customer_id,
-    o.customer_name,
-    o.email,
-    o.city,
-    o.state,
-    o.order_date,
-    o.order_total,
-    o.order_status,
-    o.order_year,
-    o.order_month,
-    o.order_day,
-    c.customer_segment,
-    c.total_revenue as customer_lifetime_value,
-    c.total_orders as customer_total_orders
-FROM 'orders.parquet' o
-LEFT JOIN 'customers.parquet' c ON o.customer_id = c.customer_id
+    order_id,
+    customer_id,
+    customer_name,
+    email,
+    city,
+    state,
+    CAST(order_date AS DATE) as order_date,
+    order_total,
+    order_status,
+    order_year,
+    order_month,
+    order_day,
+    order_day_of_week
+FROM 'fct_orders'
+ORDER BY order_date DESC
