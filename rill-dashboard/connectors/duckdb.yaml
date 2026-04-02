@@ -4,5 +4,5 @@
 type: connector
 
 driver: duckdb
-path: "/Users/alwyn.dsouza/repos/dbt-local-agent/dbt-local-agent.duckdb"
+path: "../../dbt-local-agent.duckdb"
 mode: readwrite
