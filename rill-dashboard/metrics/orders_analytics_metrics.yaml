@@ -113,6 +113,6 @@ measures:
   - name: completion_rate
     label: Completion Rate
     type: derived
-    expression: CAST(completed_orders AS DOUBLE) / total_orders
+    expression: "(completed_orders * 1.0) / total_orders"
     description: Percentage of completed orders
     format_preset: percent
