@@ -17,11 +17,11 @@ dimensions:
     type: categorical
     description: US State where customer is located
   
-  - name: customer_segment
-    label: Customer Segment
-    column: customer_segment
+  - name: order_status
+    label: Order Status
+    column: order_status
     type: categorical
-    description: Customer revenue segment
+    description: Status of the order
   
   - name: customer_id
     label: Customer ID
@@ -34,12 +34,6 @@ dimensions:
     column: customer_name
     type: categorical
     description: Customer full name
-  
-  - name: email
-    label: Email
-    column: email
-    type: categorical
-    description: Customer email address
   
   - name: city
     label: City

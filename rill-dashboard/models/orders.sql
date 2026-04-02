@@ -1,4 +1,4 @@
--- Orders Model
+-- Orders Model - Primary table for metrics
 SELECT 
     order_id,
     customer_id,
@@ -13,5 +13,5 @@ SELECT
     order_month,
     order_day,
     order_day_of_week
-FROM 'fct_orders'
+FROM fct_orders
 ORDER BY order_date DESC

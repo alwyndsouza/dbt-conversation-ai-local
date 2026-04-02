@@ -15,5 +15,5 @@ SELECT
     CAST(first_order_date AS DATE) as first_order_date,
     CAST(last_order_date AS DATE) as last_order_date,
     customer_segment
-FROM 'fct_customers'
+FROM 'data/fct_customers.parquet'
 ORDER BY customer_id

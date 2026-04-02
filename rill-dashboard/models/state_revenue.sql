@@ -9,5 +9,5 @@ SELECT
     CAST(cancelled_orders AS INTEGER) as cancelled_orders,
     total_revenue,
     avg_order_value
-FROM 'fct_revenue_by_state'
+FROM 'data/fct_revenue_by_state.parquet'
 ORDER BY state, order_date
