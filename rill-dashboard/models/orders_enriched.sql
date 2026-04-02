@@ -17,6 +17,6 @@ SELECT
     CASE WHEN o.order_status = 'pending' THEN 1 ELSE 0 END as pending_order,
     CASE WHEN o.order_status = 'cancelled' THEN 1 ELSE 0 END as cancelled_order,
     CASE WHEN o.order_status = 'completed' THEN o.order_total ELSE 0 END as revenue
-FROM fct_orders o
-LEFT JOIN fct_customers c ON o.customer_id = c.customer_id
+FROM orders o
+LEFT JOIN customers c ON o.customer_id = c.customer_id
 ORDER BY o.order_date DESC

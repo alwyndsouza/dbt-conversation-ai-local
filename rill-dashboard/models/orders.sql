@@ -13,5 +13,5 @@ SELECT
     order_month,
     order_day,
     order_day_of_week
-FROM fct_orders
+FROM 'data/fct_orders.parquet'
 ORDER BY order_date DESC

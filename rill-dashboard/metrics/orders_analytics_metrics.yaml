@@ -1,118 +1,93 @@
-# Orders Analytics MetricsView
-# Provides all dimensions and measures for the dashboard
-
 type: metrics_view
+
 model: orders_enriched
+
+# Primary time dimension
+timeseries: order_date
+smallest_time_grain: day
 
 dimensions:
   - name: order_date
-    label: Order Date
     column: order_date
     type: time
-    description: Date of the order
-  
-  - name: state
-    label: State
-    column: state
+
+  - name: order_id
+    column: order_id
     type: categorical
-    description: US State where customer is located
-  
-  - name: order_status
-    label: Order Status
-    column: order_status
-    type: categorical
-    description: Status of the order
-  
+
   - name: customer_id
-    label: Customer ID
     column: customer_id
     type: categorical
-    description: Unique customer identifier
-  
+
   - name: customer_name
-    label: Customer Name
     column: customer_name
     type: categorical
-    description: Customer full name
-  
+
+  - name: email
+    column: email
+    type: categorical
+
   - name: city
-    label: City
     column: city
     type: categorical
-    description: Customer city
-  
+
+  - name: state
+    column: state
+    type: categorical
+
+  - name: order_status
+    column: order_status
+    type: categorical
+
   - name: order_year
-    label: Year
     column: order_year
-    type: categorical
-    description: Year of the order
-  
+
   - name: order_month
-    label: Month
     column: order_month
+
+  - name: customer_segment
+    column: customer_segment
     type: categorical
-    description: Month of the order
 
 measures:
   - name: total_revenue
-    label: Total Revenue
-    type: simple
+    display_name: Total Revenue
     expression: SUM(revenue)
-    description: Sum of all order revenue
     format_preset: currency_usd
-  
+
   - name: total_orders
-    label: Total Orders
-    type: simple
-    expression: COUNT(order_id)
-    description: Total number of orders
-    format_preset: number
-  
+    display_name: Total Orders
+    expression: COUNT(*)
+    format_preset: humanize
+
   - name: completed_orders
-    label: Completed Orders
-    type: simple
+    display_name: Completed Orders
     expression: SUM(completed_order)
-    description: Number of completed orders
-    format_preset: number
-  
+    format_preset: humanize
+
   - name: pending_orders
-    label: Pending Orders
-    type: simple
+    display_name: Pending Orders
     expression: SUM(pending_order)
-    description: Number of pending orders
-    format_preset: number
-  
+    format_preset: humanize
+
   - name: cancelled_orders
-    label: Cancelled Orders
-    type: simple
+    display_name: Cancelled Orders
     expression: SUM(cancelled_order)
-    description: Number of cancelled orders
-    format_preset: number
-  
+    format_preset: humanize
+
   - name: unique_customers
-    label: Unique Customers
-    type: simple
+    display_name: Unique Customers
     expression: COUNT(DISTINCT customer_id)
-    description: Number of unique customers
-    format_preset: number
-  
-  - name: total_customers
-    label: Total Customers
-    type: simple
-    expression: COUNT(DISTINCT customer_id)
-    description: Count of distinct customers
-    format_preset: number
-  
+    format_preset: humanize
+
   - name: avg_order_value
-    label: Average Order Value
-    type: simple
-    expression: AVG(CASE WHEN order_status = 'completed' THEN order_total ELSE NULL END)
-    description: Average value per order
+    display_name: Avg Order Value (Completed)
+    expression: AVG(order_total) FILTER (WHERE completed_order = 1)
     format_preset: currency_usd
-  
+    valid_percent_of_total: false
+
   - name: completion_rate
-    label: Completion Rate
-    type: derived
-    expression: "(completed_orders * 1.0) / total_orders"
-    description: Percentage of completed orders
-    format_preset: percent
+    display_name: Completion Rate
+    expression: SUM(completed_order) / NULLIF(COUNT(*), 0)
+    format_preset: percentage
+    valid_percent_of_total: false
