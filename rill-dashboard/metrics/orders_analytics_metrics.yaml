@@ -2,7 +2,7 @@
 # Provides all dimensions and measures for the dashboard
 
 type: metrics_view
-model: daily_orders
+model: orders_enriched
 
 dimensions:
   - name: order_date
@@ -63,42 +63,42 @@ measures:
   - name: total_revenue
     label: Total Revenue
     type: simple
-    expression: SUM(total_revenue)
+    expression: SUM(revenue)
     description: Sum of all order revenue
     format_preset: currency_usd
   
   - name: total_orders
     label: Total Orders
     type: simple
-    expression: SUM(order_count)
+    expression: COUNT(order_id)
     description: Total number of orders
     format_preset: number
   
   - name: completed_orders
     label: Completed Orders
     type: simple
-    expression: SUM(completed_orders)
+    expression: SUM(completed_order)
     description: Number of completed orders
     format_preset: number
   
   - name: pending_orders
     label: Pending Orders
     type: simple
-    expression: SUM(pending_orders)
+    expression: SUM(pending_order)
     description: Number of pending orders
     format_preset: number
   
   - name: cancelled_orders
     label: Cancelled Orders
     type: simple
-    expression: SUM(cancelled_orders)
+    expression: SUM(cancelled_order)
     description: Number of cancelled orders
     format_preset: number
   
   - name: unique_customers
     label: Unique Customers
     type: simple
-    expression: SUM(unique_customers)
+    expression: COUNT(DISTINCT customer_id)
     description: Number of unique customers
     format_preset: number
   
@@ -112,13 +112,13 @@ measures:
   - name: avg_order_value
     label: Average Order Value
     type: simple
-    expression: AVG(avg_order_value)
+    expression: AVG(CASE WHEN order_status = 'completed' THEN order_total ELSE NULL END)
     description: Average value per order
     format_preset: currency_usd
   
   - name: completion_rate
     label: Completion Rate
     type: derived
-    expression: completed_orders / (completed_orders + pending_orders + cancelled_orders)
+    expression: CAST(completed_orders AS DOUBLE) / total_orders
     description: Percentage of completed orders
     format_preset: percent
