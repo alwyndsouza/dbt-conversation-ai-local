@@ -23,7 +23,8 @@ You ask a question in plain English, the LLM picks the right dbt-mcp tool, execu
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Python 3.9–3.12**
+- **Python 3.12+**
+- **uv** — [install here](https://docs.astral.sh/uv/getting-started/installation/)
 - **Ollama** — [download here](https://ollama.ai)
 
 ### Setup
@@ -144,8 +145,11 @@ Try these in the chat UI:
 ```
 dbt-local-agent/
 ├── streamlit_app.py              # Chat UI + dbt-mcp tool integration
+├── dashboard_app.py              # Plotly dashboard for orders analytics
 ├── dbt_project.yml               # dbt project configuration
 ├── profiles.yml                  # DuckDB connection profile
+├── pyproject.toml                # uv project dependencies
+├── uv.lock                       # uv lockfile
 ├── models/
 │   ├── staging/                  # Light transformations (views)
 │   ├── intermediate/             # Business logic aggregations (views)
@@ -156,8 +160,8 @@ dbt-local-agent/
 ├── tests/                        # Data quality tests
 ├── analyses/                     # Ad-hoc analytical queries
 ├── scripts/                      # Setup and verification scripts
-├── .env                          # Environment configuration
-└── requirements.txt              # Python dependencies
+├── rill-dashboard/               # Rill dashboard configuration
+└── .env                          # Environment configuration
 ```
 
 ---
