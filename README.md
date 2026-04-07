@@ -26,6 +26,7 @@ You ask a question in plain English, the LLM picks the right dbt-mcp tool, execu
 - **Python 3.12+**
 - **uv** — [install here](https://docs.astral.sh/uv/getting-started/installation/)
 - **Ollama** — [download here](https://ollama.ai)
+- **Rill** (optional) — for interactive dashboards: [install here](https://docs.rilldata.com/)
 
 ### Setup
 
@@ -49,11 +50,30 @@ uv run dbt build
 
 ### Launch
 
+**Option 1: Chat UI (Streamlit + Ollama)**
+
 ```bash
 uv run streamlit run streamlit_app.py
 ```
 
-Open [http://localhost:8501](http://localhost:8501).
+Open [http://localhost:8501](http://localhost:8501) for natural language queries.
+
+**Option 2: Analytics Dashboard (Plotly)**
+
+```bash
+uv run streamlit run dashboard_app.py
+```
+
+Open [http://localhost:8502](http://localhost:8502) for interactive visualizations.
+
+**Option 3: Rill Dashboard (Interactive BI)**
+
+```bash
+cd rill-dashboard
+rill start
+```
+
+Open [http://localhost:9009](http://localhost:9009) for drag-and-drop analytics. See [rill-dashboard/README.md](rill-dashboard/README.md) for details.
 
 ---
 
@@ -88,7 +108,15 @@ Open [http://localhost:8501](http://localhost:8501).
 │              DuckDB (Local Database)                 │
 │                                                      │
 │  Seeds → Staging → Intermediate → Marts → Metrics    │
-└─────────────────────────────────────────────────────┘
+└──────────────┬──────────────────────────────────────┘
+               │
+               ├──────────────────┐
+               ▼                  ▼
+    ┌──────────────────┐  ┌──────────────────┐
+    │ Plotly Dashboard │  │  Rill Dashboard  │
+    │ (dashboard_app)  │  │ (rill-dashboard) │
+    │  Port 8502       │  │  Port 9009       │
+    └──────────────────┘  └──────────────────┘
 ```
 
 ### Available Tools (12)
@@ -97,6 +125,40 @@ Open [http://localhost:8501](http://localhost:8501).
 |---|---|
 | **dbt CLI** (8) | `build`, `compile`, `docs`, `list`, `parse`, `run`, `test`, `show` |
 | **MetricFlow** (4) | `metricflow_list_metrics`, `metricflow_list_dimensions`, `metricflow_list_semantic_models`, `metricflow_query` |
+
+---
+
+## 📊 Dashboards & Visualization
+
+This project offers **three ways** to visualize your data:
+
+### 1. Chat UI (Natural Language → Data)
+Interactive Q&A with your semantic layer using local LLMs. Ask questions in plain English and get SQL + results.
+```bash
+uv run streamlit run streamlit_app.py  # Port 8501
+```
+
+### 2. Plotly Dashboard (Python Analytics)
+Production-ready Streamlit dashboard with KPIs, charts, and tables. Built with Plotly for customizable visualizations.
+```bash
+uv run streamlit run dashboard_app.py  # Port 8502
+```
+
+### 3. Rill Dashboard (Interactive BI)
+Drag-and-drop business intelligence dashboard with live data exploration. Mirrors the Plotly dashboard functionality with an interactive builder.
+
+```bash
+cd rill-dashboard
+rill start  # Port 9009
+```
+
+**Features:**
+- **Explore interface** with dimension/measure selectors
+- **Real-time filtering** and drill-downs
+- **Pre-configured metrics** (30+ KPIs)
+- **Same data models** as Plotly dashboard (fct_orders, fct_customers, etc.)
+
+See [rill-dashboard/README.md](rill-dashboard/README.md) for complete setup and usage.
 
 ---
 
@@ -160,7 +222,13 @@ dbt-local-agent/
 ├── tests/                        # Data quality tests
 ├── analyses/                     # Ad-hoc analytical queries
 ├── scripts/                      # Setup and verification scripts
-├── rill-dashboard/               # Rill dashboard configuration
+├── rill-dashboard/               # Rill interactive BI dashboard (mirrors dashboard_app.py)
+│   ├── rill.yaml                 # Rill project config
+│   ├── connectors/               # DuckDB connector
+│   ├── models/                   # Rill-specific SQL models
+│   ├── metrics/                  # MetricsView definitions (30+ KPIs)
+│   ├── dashboards/               # Pre-built explore dashboard
+│   └── README.md                 # Rill setup and usage guide
 └── .env                          # Environment configuration
 ```
 
@@ -192,6 +260,8 @@ These are the correct settings for fully local operation.
 | No metrics found | Run `dbt parse` to generate the semantic manifest |
 | Ollama connection error | Ensure Ollama is running: `ollama serve` |
 | No models in sidebar | Pull a model: `ollama pull llama3.2` |
+| Rill: `rill: command not found` | Install Rill: [docs.rilldata.com](https://docs.rilldata.com/install) |
+| Rill: No data in dashboard | Ensure dbt models are built: `uv run dbt build` |
 
 ---
 
@@ -202,6 +272,7 @@ These are the correct settings for fully local operation.
 - [dbt-mcp](https://github.com/dbt-labs/dbt-mcp)
 - [Ollama](https://ollama.ai)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
+- [Rill Documentation](https://docs.rilldata.com/)
 
 ---
 
