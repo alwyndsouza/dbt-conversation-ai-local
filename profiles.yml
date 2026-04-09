@@ -1,11 +1,11 @@
-dbt-local-agent:
+dbt-conversation-ai-local:
   target: dev
   outputs:
     dev:
       type: duckdb
-      path: dbt-local-agent.duckdb
+      path: dbt-conversation-ai-local.duckdb
       threads: 4
     prod:
       type: duckdb
-      path: dbt-local-agent_prod.duckdb
+      path: dbt-conversation-ai-local_prod.duckdb
       threads: 8

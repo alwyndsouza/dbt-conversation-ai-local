@@ -73,7 +73,7 @@ st.markdown(
 @st.cache_data(ttl=300)
 def load_data():
     """Load data from DuckDB with caching."""
-    conn = duckdb.connect("dbt-local-agent.duckdb")
+    conn = duckdb.connect("dbt-conversation-ai-local.duckdb")
 
     # Load all tables
     daily_orders = conn.execute(
@@ -561,7 +561,7 @@ def main():
     st.markdown(
         f"<p style='text-align: center; color: #666; font-size: 0.85rem;'>"
         f"📊 Dashboard generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | "
-        f"Data source: DuckDB (dbt-local-agent)"
+        f"Data source: DuckDB (dbt-conversation-ai-local)"
         f"</p>",
         unsafe_allow_html=True,
     )

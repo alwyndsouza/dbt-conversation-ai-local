@@ -1,8 +1,8 @@
-name: 'dbt_local_agent'
+name: 'dbt_conversation_ai_local'
 version: '1.0.0'
 config-version: 2
 
-profile: 'dbt-local-agent'
+profile: 'dbt-conversation-ai-local'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -16,7 +16,7 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  dbt_local_agent:
+  dbt_conversation_ai_local:
     staging:
       +materialized: view
       +tags: ["staging"]
@@ -28,7 +28,7 @@ models:
       +tags: ["marts"]
 
 seeds:
-  dbt_local_agent:
+  dbt_conversation_ai_local:
     +quote_columns: false
 
 vars:

@@ -508,7 +508,7 @@ wheels = [
 ]
 
 [[package]]
-name = "dbt-local-agent"
+name = "dbt-conversation-ai-local"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

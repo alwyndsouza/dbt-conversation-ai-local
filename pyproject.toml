@@ -1,5 +1,5 @@
 [project]
-name = "dbt-local-agent"
+name = "dbt-conversation-ai-local"
 version = "0.1.0"
 description = "A local AI agent for your dbt project"
 readme = "README.md"

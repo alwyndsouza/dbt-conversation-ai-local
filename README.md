@@ -1,4 +1,4 @@
-# dbt Local Agent
+# dbt Conversation AI Local
 
 A local AI agent for your dbt project — query your semantic layer, run models, and explore metrics using natural language. Powered by **dbt-mcp**, **Ollama** (local LLM), and **Streamlit**. No cloud services or API keys required.
 
@@ -32,8 +32,8 @@ You ask a question in plain English, the LLM picks the right dbt-mcp tool, execu
 
 ```bash
 # Clone the repository
-git clone https://github.com/alwyndsouza/dbt-local-agent.git
-cd dbt-local-agent
+git clone https://github.com/alwyndsouza/dbt-conversation-ai-local.git
+cd dbt-conversation-ai-local
 
 # Install dependencies using uv
 uv sync
@@ -205,7 +205,7 @@ Try these in the chat UI:
 ## 🛠️ Project Structure
 
 ```
-dbt-local-agent/
+dbt-conversation-ai-local/
 ├── streamlit_app.py              # Chat UI + dbt-mcp tool integration
 ├── dashboard_app.py              # Plotly dashboard for orders analytics
 ├── dbt_project.yml               # dbt project configuration
