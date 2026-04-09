@@ -289,7 +289,7 @@ def main():
         )
         fig.update_xaxes(title_text="Date")
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         # Order status donut
@@ -323,7 +323,7 @@ def main():
             margin=dict(l=50, r=50, t=50, b=30),
         )
 
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width="stretch")
 
     st.markdown("---")
 
@@ -357,7 +357,7 @@ def main():
         )
         fig_state.update_traces(textposition="outside")
 
-        st.plotly_chart(fig_state, use_container_width=True)
+        st.plotly_chart(fig_state, width="stretch")
 
     with col2:
         # Customer segments
@@ -383,7 +383,7 @@ def main():
             margin=dict(l=50, r=50, t=50, b=60),
         )
 
-        st.plotly_chart(fig_segments, use_container_width=True)
+        st.plotly_chart(fig_segments, width="stretch")
 
     st.markdown("---")
 
@@ -414,7 +414,7 @@ def main():
             xaxis_title="",
             yaxis_title="Orders",
         )
-        st.plotly_chart(fig_completed, use_container_width=True)
+        st.plotly_chart(fig_completed, width="stretch")
 
     with col2:
         fig_pending = go.Figure()
@@ -437,7 +437,7 @@ def main():
             xaxis_title="",
             yaxis_title="Orders",
         )
-        st.plotly_chart(fig_pending, use_container_width=True)
+        st.plotly_chart(fig_pending, width="stretch")
 
     with col3:
         fig_cancelled = go.Figure()
@@ -460,7 +460,7 @@ def main():
             xaxis_title="",
             yaxis_title="Orders",
         )
-        st.plotly_chart(fig_cancelled, use_container_width=True)
+        st.plotly_chart(fig_cancelled, width="stretch")
 
     st.markdown("---")
 
@@ -480,7 +480,7 @@ def main():
                     "unique_customers": "Customers",
                 }
             ),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -496,7 +496,7 @@ def main():
                     "revenue": "Revenue",
                 }
             ),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -554,7 +554,7 @@ def main():
 
     fig_top.update_layout(height=300, margin=dict(l=0, r=0, t=10, b=10))
 
-    st.plotly_chart(fig_top, use_container_width=True)
+    st.plotly_chart(fig_top, width="stretch")
 
     # Footer
     st.markdown("---")
