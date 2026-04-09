@@ -14,7 +14,7 @@ This dashboard provides comprehensive e-commerce analytics including:
 
 ## Data Sources
 
-The dashboard connects to the main DuckDB database (`dbt-local-agent.duckdb`) and uses these dbt models:
+The dashboard connects to the main DuckDB database (`dbt-conversation-ai-local.duckdb`) and uses these dbt models:
 - `fct_daily_orders` - Daily aggregated order metrics
 - `fct_orders` - Individual order records
 - `fct_customers` - Customer profiles with segments
