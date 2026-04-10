@@ -1,0 +1,106 @@
+type: canvas
+display_name: "Orders Analytics (Canvas)"
+
+# Sensible defaults for most components
+defaults:
+  time_range: P1M
+  comparison_mode: time
+
+rows:
+  - height: 90px
+    items:
+      - width: 12
+        markdown:
+          content: |
+            # Orders Analytics
+
+            Overview of order performance, revenue trends, fulfillment status, and top customers.
+
+  - height: 220px
+    items:
+      - width: 12
+        kpi_grid:
+          metrics_view: orders_analytics_metrics
+          measures:
+            - total_revenue
+            - total_orders
+            - unique_customers
+            - avg_order_value
+            - completion_rate
+          comparison:
+            - percent_change
+            - previous
+          sparkline: right
+
+  - height: 420px
+    items:
+      - width: 6
+        line_chart:
+          metrics_view: orders_analytics_metrics
+          title: "Revenue over time"
+          color: primary
+          x:
+            field: order_date
+            type: temporal
+          y:
+            field: total_revenue
+            type: quantitative
+            zeroBasedOrigin: true
+
+      - width: 6
+        line_chart:
+          metrics_view: orders_analytics_metrics
+          title: "Orders over time"
+          color: secondary
+          x:
+            field: order_date
+            type: temporal
+          y:
+            field: total_orders
+            type: quantitative
+            zeroBasedOrigin: true
+
+  - height: 420px
+    items:
+      - width: 6
+        bar_chart:
+          metrics_view: orders_analytics_metrics
+          title: "Revenue by state"
+          x:
+            field: state
+            type: nominal
+            limit: 20
+            sort: -y
+          y:
+            field: total_revenue
+            type: quantitative
+            zeroBasedOrigin: true
+
+      - width: 6
+        stacked_bar:
+          metrics_view: orders_analytics_metrics
+          title: "Orders by status (last 30 days)"
+          time_range: P30D
+          color:
+            field: order_status
+            type: nominal
+            limit: 10
+            legendOrientation: top
+          x:
+            field: order_date
+            type: temporal
+          y:
+            field: total_orders
+            type: quantitative
+            zeroBasedOrigin: true
+
+  - height: 420px
+    items:
+      - width: 12
+        table:
+          metrics_view: orders_analytics_metrics
+          title: "Top customers by revenue"
+          columns:
+            - customer_name
+            - total_revenue
+            - total_orders

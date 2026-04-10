@@ -1,0 +1,111 @@
+type: canvas
+display_name: "Orders Executive Pack"
+
+defaults:
+  time_range: P1M
+  comparison_mode: time
+
+rows:
+  - height: 120px
+    items:
+      - width: 12
+        markdown:
+          content: |
+            # Orders Executive Pack
+
+            High-level view of order performance for the selected period, including revenue, volume, and fulfillment health.
+
+            ---
+          alignment:
+            horizontal: left
+            vertical: middle
+
+  - height: 220px
+    items:
+      - width: 12
+        kpi_grid:
+          metrics_view: orders_analytics_metrics
+          measures:
+            - total_revenue
+            - total_orders
+            - avg_order_value
+            - completion_rate
+          comparison:
+            - percent_change
+            - previous
+          sparkline: right
+
+  - height: 380px
+    items:
+      - width: 6
+        line_chart:
+          metrics_view: orders_analytics_metrics
+          title: "Revenue over time"
+          color: primary
+          x:
+            field: order_date
+            type: temporal
+          y:
+            field: total_revenue
+            type: quantitative
+            zeroBasedOrigin: true
+
+      - width: 6
+        line_chart:
+          metrics_view: orders_analytics_metrics
+          title: "Completion rate over time"
+          color: secondary
+          x:
+            field: order_date
+            type: temporal
+          y:
+            field: completion_rate
+            type: quantitative
+            zeroBasedOrigin: true
+
+  - height: 380px
+    items:
+      - width: 6
+        bar_chart:
+          metrics_view: orders_analytics_metrics
+          title: "Revenue by state (Top 10)"
+          color: primary
+          x:
+            field: state
+            type: nominal
+            limit: 10
+            sort: -y
+          y:
+            field: total_revenue
+            type: quantitative
+            zeroBasedOrigin: true
+
+      - width: 6
+        stacked_bar:
+          metrics_view: orders_analytics_metrics
+          title: "Orders by status (Last 30 days)"
+          time_range: P30D
+          color:
+            field: order_status
+            type: nominal
+            limit: 8
+            legendOrientation: top
+          x:
+            field: order_date
+            type: temporal
+          y:
+            field: total_orders
+            type: quantitative
+            zeroBasedOrigin: true
+
+  - height: 420px
+    items:
+      - width: 12
+        table:
+          metrics_view: orders_analytics_metrics
+          title: "Top customers by revenue (Top 10)"
+          columns:
+            - customer_name
+            - total_revenue
+            - total_orders
+          # Sort is handled by the UI; keep the table lightweight and focused.
